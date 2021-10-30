@@ -1,6 +1,5 @@
 # Testing stuff
-black.png
-out.png
+*.png
 
 ### Java files ###
 *.class
