@@ -12,9 +12,9 @@ import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextBreakingUtils {
+public class FormattingUtilities {
 
-    private TextBreakingUtils() {} //Private constructor to hide implicit public one
+    private FormattingUtilities() {} //Private constructor to hide implicit public one
 
     public static BrokenText breakText(String text, Font font, FontRenderContext fontRenderContext, float width) {
         AttributedString attributedString = new AttributedString(text);
@@ -36,6 +36,28 @@ public class TextBreakingUtils {
         }
 
         return new BrokenText(lines, text, textHeight);
+    }
+
+    public static float getAdaptFontSize(String text, Font initialFont, FontRenderContext fontRenderContext, int maxHeight, int maxWidth) throws FontFormatException {
+        Font font = initialFont;
+        float fontSize = font.getSize();
+
+        int height;
+        do {
+            height = 0;
+            fontSize -= 1F;
+            font = font.deriveFont(fontSize);
+
+            for (TextLayout line : breakText(text, font, fontRenderContext, maxWidth).getLines()) {
+                height += line.getAscent() + line.getDescent() + line.getLeading();
+            }
+
+            if (fontSize < 0) {
+                throw new FontFormatException("Result font size is negative");
+            }
+
+        } while (height > maxHeight);
+        return fontSize;
     }
 
 }
