@@ -13,10 +13,13 @@ public class ImageTextAdder {
 
     private ImageTextAdder() {}
 
-    public static BufferedImage drawTextInSquare(BufferedImage image, String text, Font font, int rectangleX, int rectangleY, int rectangleWidth, int rectangleHeight) {
+    public static BufferedImage drawTextInSquare(BufferedImage image, String text, Font font, Color color, int rectangleX, int rectangleY, int rectangleWidth, int rectangleHeight) {
         Graphics2D graphics2D = (Graphics2D) image.getGraphics();
         Rectangle rectangle = new Rectangle(rectangleX, rectangleY, rectangleWidth, rectangleHeight);
-        BrokenText brokenText = FormattingUtilities.breakText(text, font, graphics2D.getFontRenderContext(), rectangleWidth);
+        BrokenText brokenText = FormattingUtilities.breakText(text, font, color, graphics2D.getFontRenderContext(), rectangleWidth);
+
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         // Draw rectangle bounds on image -- DEBUG ONLY
         //graphics2D.draw3DRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height, true);
@@ -35,23 +38,23 @@ public class ImageTextAdder {
         return image;
     }
 
-    public static BufferedImage drawTextInCenteredSquareWithOffset(BufferedImage image, String text, Font font, int rectangleWidth, int rectangleHeight, int offsetX, int offsetY) {
+    public static BufferedImage drawTextInCenteredSquareWithOffset(BufferedImage image, String text, Font font, Color color, int rectangleWidth, int rectangleHeight, int offsetX, int offsetY) {
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
 
         int rectanglePositionX = (imageWidth / 2) - (rectangleWidth / 2) + offsetX;
         int rectanglePositionY = (imageHeight / 2) - (rectangleHeight / 2) + offsetY;
 
-        return drawTextInSquare(image, text, font, rectanglePositionX, rectanglePositionY, rectangleWidth, rectangleHeight);
+        return drawTextInSquare(image, text, font, color, rectanglePositionX, rectanglePositionY, rectangleWidth, rectangleHeight);
     }
 
-    public static BufferedImage drawTextInCenteredSquare(BufferedImage image, String text, Font font, int rectangleWidth, int rectangleHeight) {
-        return drawTextInCenteredSquareWithOffset(image, text, font, rectangleWidth, rectangleHeight, 0, 0);
+    public static BufferedImage drawTextInCenteredSquare(BufferedImage image, String text, Font font, Color color, int rectangleWidth, int rectangleHeight) {
+        return drawTextInCenteredSquareWithOffset(image, text, font, color, rectangleWidth, rectangleHeight, 0, 0);
     }
 
-    public static float getAdaptFontSize(BufferedImage image, String text, Font initialFont, int maxHeight, int maxWidth) throws FontFormatException {
+    public static float getAdaptFontSize(BufferedImage image, String text, Font initialFont, Color color, int maxHeight, int maxWidth) throws FontFormatException {
         Graphics2D graphics2D = (Graphics2D) image.getGraphics();
-        return FormattingUtilities.getAdaptFontSize(text, initialFont, graphics2D.getFontRenderContext(), maxHeight, maxWidth);
+        return FormattingUtilities.getAdaptFontSize(text, initialFont, color, graphics2D.getFontRenderContext(), maxHeight, maxWidth);
     }
 
 }

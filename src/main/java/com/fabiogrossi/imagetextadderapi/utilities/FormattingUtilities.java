@@ -16,11 +16,12 @@ public class FormattingUtilities {
 
     private FormattingUtilities() {} //Private constructor to hide implicit public one
 
-    public static BrokenText breakText(String text, Font font, FontRenderContext fontRenderContext, float width) {
+    public static BrokenText breakText(String text, Font font, Color color, FontRenderContext fontRenderContext, float width) {
         AttributedString attributedString = new AttributedString(text);
         AttributedCharacterIterator characterIterator = attributedString.getIterator();
 
         attributedString.addAttribute(TextAttribute.FONT, font, 0, characterIterator.getEndIndex());
+        attributedString.addAttribute(TextAttribute.FOREGROUND, color, 0, characterIterator.getEndIndex());
 
         LineBreakMeasurer measurer = new LineBreakMeasurer(characterIterator, fontRenderContext);
 
@@ -38,7 +39,7 @@ public class FormattingUtilities {
         return new BrokenText(lines, text, textHeight);
     }
 
-    public static float getAdaptFontSize(String text, Font initialFont, FontRenderContext fontRenderContext, int maxHeight, int maxWidth) throws FontFormatException {
+    public static float getAdaptFontSize(String text, Font initialFont, Color color, FontRenderContext fontRenderContext, int maxHeight, int maxWidth) throws FontFormatException {
         Font font = initialFont;
         float fontSize = font.getSize();
 
@@ -48,7 +49,7 @@ public class FormattingUtilities {
             fontSize -= 1F;
             font = font.deriveFont(fontSize);
 
-            for (TextLayout line : breakText(text, font, fontRenderContext, maxWidth).getLines()) {
+            for (TextLayout line : breakText(text, font, color, fontRenderContext, maxWidth).getLines()) {
                 height += line.getAscent() + line.getDescent() + line.getLeading();
             }
 
